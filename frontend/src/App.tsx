@@ -1,10 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import Movie from './components/Movie'
+import type {IMovie} from './types/movies'
+import axios from 'axios'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const baseUrl = "http://localhost:3001"
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const fetchMovies = useCallback(async () => {
+    try {
+      const response = await axios.get(baseUrl + "/movies");
+      setMovies(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
 
   return (
     <>
@@ -17,17 +33,14 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+        <div id="movieContainer">
+          {movies.length > 0 ? 
+          (movies.map(movie => <Movie key = {movie.id} movie={movie} />)) : 
+          (<p>No hay películas aún.</p>)}
+        </div>
     </>
   )
 }

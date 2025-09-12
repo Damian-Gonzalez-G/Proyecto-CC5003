@@ -12,7 +12,8 @@
         "James Caan",
         "Diane Keaton"
       ],
-      "rating": 9.2
+      "rating": 9.2,
+      "provider": "p1"
     },
     {
       "title": "Pulp Fiction",
@@ -26,7 +27,8 @@
         "Samuel L. Jackson",
         "Bruce Willis"
       ],
-      "rating": 8.9
+      "rating": 8.9,
+      "provider": ["p1", "p2"]
     },
     {
       "title": "Lord of the Rings: The Fellowship of the Ring",
@@ -40,7 +42,8 @@
         "Viggo Mortensen",
         "Orlando Bloom"
       ],
-      "rating": 8.8
+      "rating": 8.8,
+      "provider": ["p3", "p4"]
     },
     {
       "title": "Parasite",
@@ -54,7 +57,8 @@
         "Cho Yeo-jeong",
         "Choi Woo-shik"
       ],
-      "rating": 8.6
+      "rating": 8.6,
+      "provider": "p3"
     }
   ]
 }
