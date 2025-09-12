@@ -1,60 +1,60 @@
 {
-  "peliculas": [
+  "movies": [
     {
-      "titulo": "El Padrino",
+      "title": "The Godfather",
       "director": "Francis Ford Coppola",
-      "año": 1972,
-      "genero": ["Crimen", "Drama"],
-      "duracion_min": 175,
-      "reparto": [
+      "year": 1972,
+      "genre": ["Crime", "Drama"],
+      "time": 175,
+      "cast": [
         "Marlon Brando",
         "Al Pacino",
         "James Caan",
         "Diane Keaton"
       ],
-      "calificacion": 9.2
+      "rating": 9.2
     },
     {
-      "titulo": "Pulp Fiction",
+      "title": "Pulp Fiction",
       "director": "Quentin Tarantino",
-      "año": 1994,
-      "genero": ["Crimen", "Drama"],
-      "duracion_min": 154,
-      "reparto": [
+      "year": 1994,
+      "genre": ["Crimen", "Drama"],
+      "time": 154,
+      "cast": [
         "John Travolta",
         "Uma Thurman",
         "Samuel L. Jackson",
         "Bruce Willis"
       ],
-      "calificacion": 8.9
+      "rating": 8.9
     },
     {
-      "titulo": "El Señor de los Anillos: La Comunidad del Anillo",
+      "title": "Lord of the Rings: The Fellowship of the Ring",
       "director": "Peter Jackson",
-      "año": 2001,
-      "genero": ["Fantasía", "Aventura"],
-      "duracion_min": 178,
-      "reparto": [
+      "year": 2001,
+      "genre": ["Fantasy", "Adventure"],
+      "time": 178,
+      "cast": [
         "Elijah Wood",
         "Ian McKellen",
         "Viggo Mortensen",
         "Orlando Bloom"
       ],
-      "calificacion": 8.8
+      "rating": 8.8
     },
     {
-      "titulo": "Parasite",
+      "title": "Parasite",
       "director": "Bong Joon-ho",
-      "año": 2019,
-      "genero": ["Drama", "Thriller"],
-      "duracion_min": 132,
-      "reparto": [
+      "year": 2019,
+      "genre": ["Drama", "Thriller"],
+      "time": 132,
+      "cast": [
         "Song Kang-ho",
         "Lee Sun-kyun",
         "Cho Yeo-jeong",
         "Choi Woo-shik"
       ],
-      "calificacion": 8.6
+      "rating": 8.6
     }
   ]
 }
