@@ -1,14 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Movie from './components/Movie'
+import SearchBar from './components/SearchBar'
 import type {IMovie} from './types/movies'
 import axios from 'axios'
 import './App.css'
 
 function App() {
+
   const baseUrl = "http://localhost:3001"
   const [movies, setMovies] = useState<IMovie[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const fetchMovies = useCallback(async () => {
     try {
       const response = await axios.get(baseUrl + "/movies");
@@ -22,25 +24,19 @@ function App() {
     fetchMovies();
   }, [fetchMovies]);
 
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Hito 1</h1>
+      <SearchBar query={searchQuery} onChange={setSearchQuery} />
+      <div id="movieContainer">
+        {filteredMovies.length > 0 ? 
+        (filteredMovies.map(movie => <Movie key = {movie.id} movie={movie} />)) : 
+        (<p>No hay películas aún.</p>)}
       </div>
-      <h1>Vite + React</h1>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-        <div id="movieContainer">
-          {movies.length > 0 ? 
-          (movies.map(movie => <Movie key = {movie.id} movie={movie} />)) : 
-          (<p>No hay películas aún.</p>)}
-        </div>
     </>
   )
 }
