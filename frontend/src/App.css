@@ -23,3 +23,70 @@
 .movie-card:hover {
   transform: scale(1.05);
 }
+
+
+.card-link {
+  color: inherit;
+  text-decoration: none;
+}
+.card-link:hover {
+  text-decoration: none; /* o underline si quieres feedback */
+}
+
+
+.details-wrapper {
+  display: flex;
+  justify-content: center;   /* centra horizontal */
+  padding: 32px 0;
+}
+
+.movie-details {
+  width: 100%;
+  max-width: 900px;          /* límite de ancho */
+  background-color: #f8f8f8;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  text-align: left;
+}
+
+.movie-details h1 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.movie-details .meta {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.movie-details .poster {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+}
+
+.movie-details .description {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 24px;
+}
+
+.movie-details .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.movie-details .tag {
+  background-color: #e0e0e0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #333;
+}

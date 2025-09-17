@@ -9,11 +9,11 @@ const MovieDetails = ({movie}: MovieDetailsProps) => {
         <div className="movie-details">
             <h2>{movie.title} ({movie.year})</h2>
             <p>Director: {movie.director}</p>
-            <p>Genre: {movie.genre}</p>
-            <p>Length: {movie.time}</p>
+            <p>Genre: {movie.genre.join(", ")}</p>
+            <p>Length: {movie.time} min.</p>
             <p>Provider: {movie.provider}</p>
             <p><strong>Rating:</strong> {movie.rating}/10</p>
-            <p>Cast: {movie.cast}</p>
+            <p>Cast: {movie.cast.join(", ")}</p>
         </div>
     )
 }

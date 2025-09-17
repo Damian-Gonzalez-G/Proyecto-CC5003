@@ -14,7 +14,7 @@ const MovieDetailsPage = () => {
     const fetchMovie = useCallback(async () => {
         if (!id) return;
         try {
-            const response = await axios.get(baseUrl + `/movies?id=${id}`);
+            const response = await axios.get(baseUrl + `/movies/${id}`);
             setMovie(response.data);
         } catch (err) {
             console.error(err);
@@ -31,7 +31,7 @@ const MovieDetailsPage = () => {
 
     return (
         <>
-            <div id="movieContainer">
+            <div className="details-wrapper">
                 <MovieDetails key={movie.id} movie={movie} />
             </div>
         </>
