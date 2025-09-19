@@ -8,4 +8,4 @@ export interface IMovie {
   cast: string[]
   rating: number
   provider: string[]
-} 
+};
