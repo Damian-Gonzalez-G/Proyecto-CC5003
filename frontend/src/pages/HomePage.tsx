@@ -28,7 +28,7 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="page-header text-4xl md:text-6xl font-bold mb-8">🎬 Descubre Películas</h1>
+      <h1 className="page-header text-4xl md:text-6xl font-bold mb-8">🎬 WatchGuide</h1>
 
       <div className="search-container">
         <SearchBar query={searchQuery} onChange={setSearchQuery} />
