@@ -20,7 +20,7 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
     setIsUpdating(true);
     try {
       const baseUrl = "http://localhost:3001";
-      const response = await axios.put(`${baseUrl}/movies/${movie.id}`, {
+      await axios.put(`${baseUrl}/movies/${movie.id}`, {
         ...movie,
         provider: [newProvider.trim()],
       });
