@@ -7,7 +7,7 @@ import type { IMovie } from "../types/movies";
 import axios from "axios";
 
 const HomePage = () => {
-  const baseUrl = "http://localhost:3001";
+  const baseUrl = "http://localhost:4000/api";
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 

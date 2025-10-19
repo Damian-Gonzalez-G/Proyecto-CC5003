@@ -7,7 +7,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 
 const MovieDetailsPage = () => {
-  const baseUrl = "http://localhost:3001";
+  const baseUrl = "http://localhost:4000/api";
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<IMovie | null>(null);
 
