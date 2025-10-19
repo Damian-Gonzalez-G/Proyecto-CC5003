@@ -14,30 +14,35 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
   const [newProvider, setNewProvider] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleProviderChange = async () => {
-    if (!newProvider.trim()) return;
+const handleProviderChange = async () => {
+  if (!newProvider.trim()) return;
 
-    setIsUpdating(true);
-    try {
-      const baseUrl = "http://localhost:4000/api";
-      await axios.put(`${baseUrl}/movies/${movie._id}`, {
-        ...movie,
-        provider: [newProvider.trim()],
-      });
+  setIsUpdating(true);
+  try {
+    const baseUrl = "http://localhost:4000/api";
+    
+    const movieToUpdate = {
+      ...movie,
+      provider: [newProvider.trim()],
+    };
 
-      const updatedMovie = { ...movie, provider: [newProvider.trim()] };
-      if (onMovieUpdate) {
-        onMovieUpdate(updatedMovie);
-      }
-
-      setIsModalOpen(false);
-      setNewProvider("");
-    } catch (error) {
-      console.error("Error updating provider:", error);
-    } finally {
-      setIsUpdating(false);
+    const response = await axios.put(`${baseUrl}/movies/${movie._id}`, movieToUpdate);
+    
+    const updatedMovie = response.data;
+    
+    if (onMovieUpdate) {
+      onMovieUpdate(updatedMovie);
     }
+
+    setIsModalOpen(false);
+    setNewProvider("");
+  } catch (error) {
+    console.error("Error updating provider:", error);
+    alert("Error al actualizar la plataforma");
+  } finally {
+    setIsUpdating(false);
   }
+}
 
   return (
     <>
