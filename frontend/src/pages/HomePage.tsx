@@ -36,7 +36,7 @@ const HomePage = () => {
 
       <div className="movie-grid">
         {filteredMovies.length > 0 ? (
-          filteredMovies.map((movie) => <Movie key={movie.id} movie={movie} />)
+          filteredMovies.map((movie) => <Movie key={movie._id} movie={movie} />)
         ) : (
           <div className="no-results col-span-full">
             <p className="text-xl">No se encontraron películas.</p>

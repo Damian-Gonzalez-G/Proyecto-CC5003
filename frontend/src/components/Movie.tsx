@@ -7,7 +7,7 @@ interface MovieProps {
 
 const Movie = ({ movie }: MovieProps) => {
   return (
-    <Link to={`/movies/${movie.id}`} className="block">
+    <Link to={`/movies/${movie._id}`} className="block">
       <div className="movie-card group">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-xl font-bold text-card-foreground group-hover:text-primary transition-colors line-clamp-2">

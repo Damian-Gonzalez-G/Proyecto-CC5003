@@ -1,4 +1,3 @@
-// src/movies/movie.model.ts
 import { Schema, model } from "mongoose";
 
 const movieSchema = new Schema(
@@ -17,7 +16,6 @@ const movieSchema = new Schema(
       set: (val: string | string[]) => (Array.isArray(val) ? val : [val]),
     },
   },
-  { timestamps: true }
 );
 
 export const Movie = model("Movie", movieSchema);
