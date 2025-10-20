@@ -16,6 +16,15 @@ router.post("/", async (req, res, next) => {
     const saved = await user.save();
     return res.status(201).json(saved);
   } catch (err) {
+    // Handle duplicate username (MongoDB E11000)
+    // err may be a MongoServerError with code 11000
+    // Return 409 Conflict with a helpful message instead of 500
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const anyErr = err as any;
+    if (anyErr?.code === 11000) {
+      return res.status(409).json({ error: "username already exists" });
+    }
+
     next(err);
   }
 });

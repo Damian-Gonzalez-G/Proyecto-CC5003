@@ -1,8 +1,10 @@
+"use client"
+
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { useAuth } from "../contexts/authContext"
+import { useAuth } from "../contexts/auth"
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams()
@@ -10,15 +12,21 @@ const AuthPage = () => {
   const [activeTab, setActiveTab] = useState<"login" | "register">(initialTab as "login" | "register")
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
 
-  const { login, register } = useAuth()
+  const { login, register, isAuthenticated } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/movies")
+    }
+  }, [isAuthenticated, navigate])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -27,10 +35,10 @@ const AuthPage = () => {
       newErrors.name = "El nombre es requerido"
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "El email es requerido"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email inválido"
+    if (!formData.username.trim()) {
+      newErrors.username = "El nombre de usuario es requerido"
+    } else if (formData.username.length < 3) {
+      newErrors.username = "El nombre de usuario debe tener al menos 3 caracteres"
     }
 
     if (!formData.password) {
@@ -60,14 +68,14 @@ const AuthPage = () => {
 
     try {
       if (activeTab === "login") {
-        await login(formData.email, formData.password)
+        await login(formData.username, formData.password)
       } else {
-        await register(formData.name, formData.email, formData.password)
+        await register(formData.username, formData.name, formData.password)
       }
-      navigate("/")
+      navigate("/movies")
     } catch (error) {
       console.error("Error de autenticación:", error)
-      setErrors({ general: "Error al procesar la solicitud" })
+      setErrors({ general: "Error al procesar la solicitud. Verifica tus credenciales." })
     } finally {
       setIsLoading(false)
     }
@@ -142,21 +150,21 @@ const AuthPage = () => {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
-                Email
+              <label htmlFor="username" className="block text-sm font-medium text-card-foreground mb-2">
+                Nombre de usuario
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
+                id="username"
+                name="username"
+                type="text"
+                value={formData.username}
                 onChange={handleChange}
                 className={`w-full px-4 py-2 bg-input border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${
-                  errors.email ? "border-red-500" : "border-border"
+                  errors.username ? "border-red-500" : "border-border"
                 }`}
-                placeholder="tu@email.com"
+                placeholder="juanperez"
               />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
             </div>
 
             <div>

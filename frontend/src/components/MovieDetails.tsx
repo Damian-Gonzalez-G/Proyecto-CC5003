@@ -4,7 +4,7 @@ import { useState } from "react"
 import type { IMovie } from "../types/movies"
 import StreamingBadge from "./StreamingBadge"
 import axios from "axios"
-import { useAuth } from "../contexts/authContext"
+import { useAuth } from "../contexts/auth"
 
 interface MovieDetailsProps {
   movie: IMovie
@@ -18,8 +18,8 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
 
   const { user, isAuthenticated, toggleFavorite, toggleWatchlist } = useAuth()
 
-  const isFavorite = user?.favorites.includes(movie._id) || false
-  const isInWatchlist = user?.watchlist.includes(movie._id) || false
+  const isFavorite = (user?.favorites ?? []).includes(movie._id)
+  const isInWatchlist = (user?.watchlist ?? []).includes(movie._id)
 
   const handleProviderChange = async () => {
     if (!newProvider.trim()) return
@@ -82,7 +82,7 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
         )}
 
         <div className="text-center mb-8 pb-8 border-b border-border">
-          <h1 className="text-5xl font-bold text-card-foreground mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold text-card-foreground mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text">
             {movie.title}
           </h1>
           <p className="text-2xl text-muted-foreground">({movie.year})</p>

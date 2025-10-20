@@ -5,10 +5,9 @@ import Movie from "../components/Movie"
 import SearchBar from "../components/SearchBar"
 import FilterBar from "../components/FilterBar"
 import type { IMovie } from "../types/movies"
-import axios from "axios"
+import { movieApi } from "../services/api"
 
 const HomePage = () => {
-  const baseUrl = "http://localhost:4000/api"
   const [movies, setMovies] = useState<IMovie[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedGenre, setSelectedGenre] = useState("")
@@ -19,14 +18,18 @@ const HomePage = () => {
   const fetchMovies = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await axios.get(baseUrl + "/movies")
-      setMovies(response.data)
+      const params: { q?: string; provider?: string } = {}
+      if (searchQuery) params.q = searchQuery
+      if (selectedPlatform) params.provider = selectedPlatform
+
+      const data = await movieApi.getAll(params)
+      setMovies(data)
     } catch (err) {
-      console.error(err)
+      console.error("Error fetching movies:", err)
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [searchQuery, selectedPlatform])
 
   useEffect(() => {
     fetchMovies()
@@ -45,14 +48,10 @@ const HomePage = () => {
   }, [movies])
 
   const filteredMovies = useMemo(() => {
-    let filtered = movies.filter((movie) => movie.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    let filtered = [...movies]
 
     if (selectedGenre) {
       filtered = filtered.filter((movie) => movie.genre.includes(selectedGenre))
-    }
-
-    if (selectedPlatform) {
-      filtered = filtered.filter((movie) => movie.provider.includes(selectedPlatform))
     }
 
     // Sort movies
@@ -69,7 +68,7 @@ const HomePage = () => {
     })
 
     return filtered
-  }, [movies, searchQuery, selectedGenre, selectedPlatform, sortBy])
+  }, [movies, selectedGenre, sortBy])
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../../contexts/authContext"
+import { useAuth } from "../../contexts/auth"
 import { useState } from "react"
 
 const Header = () => {
@@ -7,9 +7,9 @@ const Header = () => {
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const handleLogout = () => {
-    logout()
-    navigate("/")
+  const handleLogout = async () => {
+    await logout()
+    navigate("/auth?tab=login")
     setIsMenuOpen(false)
   }
 
@@ -17,7 +17,10 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link
+            to={isAuthenticated ? "/movies" : "/auth?tab=login"}
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
             <span className="text-2xl">🎬</span>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               WatchGuide
@@ -25,9 +28,11 @@ const Header = () => {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-foreground hover:text-primary transition-colors">
-              Catálogo
-            </Link>
+            {isAuthenticated && (
+              <Link to="/movies" className="text-foreground hover:text-primary transition-colors">
+                Catálogo
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>
@@ -44,7 +49,7 @@ const Header = () => {
                     className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
                   >
                     <img
-                      src={user?.avatar || "/placeholder.svg"}
+                      src={"/placeholder.svg"}
                       alt={user?.name}
                       className="w-8 h-8 rounded-full border-2 border-primary"
                     />
@@ -95,13 +100,15 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-4">
-              <Link
-                to="/"
-                onClick={() => setIsMenuOpen(false)}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                Catálogo
-              </Link>
+              {isAuthenticated && (
+                <Link
+                    to="/movies"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-foreground hover:text-primary transition-colors"
+                >
+                  Catálogo
+                </Link>
+              )}
 
               {isAuthenticated ? (
                 <>

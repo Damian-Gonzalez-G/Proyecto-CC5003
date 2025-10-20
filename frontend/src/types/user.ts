@@ -1,18 +1,16 @@
 export interface IUser {
-  _id: string
-  name: string
-  email: string
-  avatar?: string
-  favorites: string[]
-  watchlist: string[]
-  createdAt: string
+  id: string
+  username: string
+  name?: string
+  favorites?: string[]
+  watchlist?: string[]
 }
 
 export interface AuthContextType {
   user: IUser | null
-  login: (email: string, password: string) => Promise<void>
-  register: (name: string, email: string, password: string) => Promise<void>
-  logout: () => void
+  login: (username: string, password: string) => Promise<void>
+  register: (username: string, name: string, password: string) => Promise<void>
+  logout: () => Promise<void>
   isAuthenticated: boolean
   toggleFavorite: (movieId: string) => void
   toggleWatchlist: (movieId: string) => void

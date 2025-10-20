@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { useAuth } from "../contexts/authContext"
+import { useAuth } from "../contexts/auth"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import type { IMovie } from "../types/movies"
 import axios from "axios"
@@ -26,8 +26,8 @@ const ProfilePage = () => {
       const response = await axios.get(`${baseUrl}/movies`)
       const allMovies = response.data
 
-      const favorites = allMovies.filter((movie: IMovie) => user.favorites.includes(movie._id))
-      const watchlist = allMovies.filter((movie: IMovie) => user.watchlist.includes(movie._id))
+  const favorites = allMovies.filter((movie: IMovie) => (user.favorites ?? []).includes(movie._id))
+  const watchlist = allMovies.filter((movie: IMovie) => (user.watchlist ?? []).includes(movie._id))
 
       setFavoriteMovies(favorites)
       setWatchlistMovies(watchlist)
@@ -87,16 +87,13 @@ const ProfilePage = () => {
         <div className="bg-card border border-border rounded-lg p-6 mb-6">
           <div className="flex items-center gap-4">
             <img
-              src={user.avatar || "/placeholder.svg"}
-              alt={user.name}
+              src={"frontend/public/vite.svg"}
+              alt={user.name ?? user.username}
               className="w-20 h-20 rounded-full border-4 border-primary"
             />
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-card-foreground">{user.name}</h1>
-              <p className="text-muted-foreground">{user.email}</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                Miembro desde {new Date(user.createdAt).toLocaleDateString("es-ES", { month: "long", year: "numeric" })}
-              </p>
+              <h1 className="text-2xl font-bold text-card-foreground">{user.name ?? user.username}</h1>
+              <p className="text-muted-foreground">{user.username}</p>
             </div>
             <button
               onClick={logout}
@@ -122,21 +119,21 @@ const ProfilePage = () => {
             onClick={() => navigate("/profile?tab=favorites")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
               activeTab === "favorites"
-                ? "bg-primary text-primary-foreground"
-                : "bg-card text-card-foreground border border-border hover:bg-muted"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card text-card-foreground border border-border hover:bg-muted"
             }`}
           >
-            Favoritos ({user.favorites.length})
+                Favoritos ({(user.favorites ?? []).length})
           </button>
           <button
             onClick={() => navigate("/profile?tab=watchlist")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
               activeTab === "watchlist"
-                ? "bg-primary text-primary-foreground"
-                : "bg-card text-card-foreground border border-border hover:bg-muted"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card text-card-foreground border border-border hover:bg-muted"
             }`}
           >
-            Ver después ({user.watchlist.length})
+                Ver después ({(user.watchlist ?? []).length})
           </button>
           <button
             onClick={() => navigate("/profile?tab=settings")}
@@ -154,17 +151,17 @@ const ProfilePage = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-card border border-border rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-primary mb-2">{user.favorites.length}</div>
+                  <div className="text-3xl font-bold text-primary mb-2">{(user.favorites ?? []).length}</div>
                 <div className="text-muted-foreground">Películas Favoritas</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-accent mb-2">{user.watchlist.length}</div>
+                  <div className="text-3xl font-bold text-accent mb-2">{(user.watchlist ?? []).length}</div>
                 <div className="text-muted-foreground">Para Ver Después</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">
-                  {user.favorites.length + user.watchlist.length}
-                </div>
+                  <div className="text-3xl font-bold text-secondary mb-2">
+                    {(user.favorites ?? []).length + (user.watchlist ?? []).length}
+                  </div>
                 <div className="text-muted-foreground">Total Guardadas</div>
               </div>
             </div>
@@ -253,16 +250,16 @@ const ProfilePage = () => {
                     <label className="block text-sm font-medium text-card-foreground mb-2">Nombre</label>
                     <input
                       type="text"
-                      value={user.name}
+                      value={user.name ?? user.username}
                       disabled
                       className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-card-foreground mb-2">Email</label>
+                    <label className="block text-sm font-medium text-card-foreground mb-2">Usuario</label>
                     <input
-                      type="email"
-                      value={user.email}
+                      type="text"
+                      value={user.username}
                       disabled
                       className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
                     />
