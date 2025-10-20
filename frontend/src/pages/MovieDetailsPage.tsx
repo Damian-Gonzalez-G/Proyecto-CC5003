@@ -1,32 +1,32 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react";
-import MovieDetails from "../components/MovieDetails";
-import type { IMovie } from "../types/movies";
-import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react"
+import MovieDetails from "../components/MovieDetails"
+import type { IMovie } from "../types/movies"
+import axios from "axios"
+import { useParams, Link } from "react-router-dom"
 
 const MovieDetailsPage = () => {
-  const baseUrl = "http://localhost:4000/api";
-  const { id } = useParams<{ id: string }>();
-  const [movie, setMovie] = useState<IMovie | null>(null);
+  const baseUrl = "http://localhost:4000/api"
+  const { id } = useParams<{ id: string }>()
+  const [movie, setMovie] = useState<IMovie | null>(null)
 
   const fetchMovie = useCallback(async () => {
-    if (!id) return;
+    if (!id) return
     try {
-      const response = await axios.get(baseUrl + `/movies/${id}`);
-      setMovie(response.data);
+      const response = await axios.get(baseUrl + `/movies/${id}`)
+      setMovie(response.data)
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  }, [id]);
+  }, [id])
 
   useEffect(() => {
-    fetchMovie();
-  }, [fetchMovie]);
+    fetchMovie()
+  }, [fetchMovie])
 
   const handleMovieUpdate = (updatedMovie: IMovie) => {
-    setMovie(updatedMovie);
+    setMovie(updatedMovie)
   }
 
   if (!movie) {
@@ -51,6 +51,6 @@ const MovieDetailsPage = () => {
       </div>
     </div>
   )
-};
+}
 
-export default MovieDetailsPage;
+export default MovieDetailsPage

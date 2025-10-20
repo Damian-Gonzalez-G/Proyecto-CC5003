@@ -4,31 +4,38 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --background: oklch(0.12 0.01 264);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.15 0.01 264);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.15 0.01 264);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.55 0.22 25);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.35 0.15 25);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.22 0.01 264);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.25 0.02 264);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.25 0.01 264);
+  --input: oklch(0.22 0.01 264);
+  --ring: oklch(0.55 0.22 25);
+  --radius: 0.75rem;
+
+  --netflix: oklch(0.55 0.22 25);
+  --prime: oklch(0.65 0.15 200);
+  --disney: oklch(0.45 0.18 260);
+  --hbo: oklch(0.45 0.15 280);
+  --apple: oklch(0.35 0 0);
+  --paramount: oklch(0.5 0.2 240);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -103,6 +110,13 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-netflix: var(--netflix);
+  --color-prime: var(--prime);
+  --color-disney: var(--disney);
+  --color-hbo: var(--hbo);
+  --color-apple: var(--apple);
+  --color-paramount: var(--paramount);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -118,61 +132,178 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+@media (max-width: 640px) {
+  .movie-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
 
 .movie-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: linear-gradient(145deg, var(--color-card), oklch(0.17 0.01 264));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .movie-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: var(--primary);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-primary);
+  border-color: var(--color-primary);
 }
 
-.movie-details-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+.movie-card:hover::before {
+  opacity: 1;
 }
 
 .search-container {
-  max-width: 600px;
-  margin: 0 auto 2rem;
+  max-width: 700px;
+  margin: 0 auto;
   padding: 0 1rem;
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  background-size: 200% auto;
+  animation: gradient 3s ease infinite;
 }
 
-.loading-state {
-  text-align: center;
-  padding: 3rem;
-  color: var(--muted-foreground);
+@keyframes gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .no-results {
   text-align: center;
-  padding: 3rem;
-  color: var(--muted-foreground);
+  padding: 4rem 2rem;
+  color: var(--color-muted-foreground);
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: var(--color-muted-foreground);
+}
+
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  transition: all 0.2s ease;
+}
+
+.platform-netflix {
+  background: var(--color-netflix);
+  color: white;
+}
+
+.platform-prime {
+  background: var(--color-prime);
+  color: white;
+}
+
+.platform-disney {
+  background: var(--color-disney);
+  color: white;
+}
+
+.platform-hbo {
+  background: var(--color-hbo);
+  color: white;
+}
+
+.platform-apple {
+  background: var(--color-apple);
+  color: white;
+  border: 1px solid var(--color-border);
+}
+
+.platform-paramount {
+  background: var(--color-paramount);
+  color: white;
+}
+
+.platform-default {
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+}
+
+.filter-button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  background: var(--color-muted);
+  border-color: var(--color-primary);
+}
+
+.filter-button.active {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-color: var(--color-primary);
 }
