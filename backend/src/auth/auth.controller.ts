@@ -34,15 +34,26 @@ router.post("/", async (req, res) => {
   return res.status(200).json({ id: user.id, username: user.username, name: user.name });
 });
 
-router.get("/me", (req, res) => {
+router.get("/me", async (req, res) => {
   try {
     const token = req.cookies?.token
     if (!token) return res.status(401).json({ error: "missing token" })
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
     if (typeof decoded === "object" && (decoded as any).id) {
-      // Return minimal user info expected by the frontend
-      return res.status(200).json({ id: (decoded as any).id, username: (decoded as any).username, name: (decoded as any).name ?? null })
+      const userId = (decoded as any).id;
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(401).json({ error: "user not found" });
+      }
+
+      const csrf = (decoded as any).csrf;
+      if (csrf) {
+        res.setHeader("X-CSRF-Token", csrf);
+      }
+      
+      return res.status(200).json(user);
     }
 
     return res.status(401).json({ error: "invalid token" })

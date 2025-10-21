@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback, useMemo } from "react"
 import Movie from "../components/Movie"
 import SearchBar from "../components/SearchBar"
@@ -54,7 +52,6 @@ const HomePage = () => {
       filtered = filtered.filter((movie) => movie.genre.includes(selectedGenre))
     }
 
-    // Sort movies
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "year":

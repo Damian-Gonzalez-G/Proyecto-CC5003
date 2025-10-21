@@ -1,5 +1,3 @@
-"use client"
-
 interface FilterBarProps {
   genres: string[]
   platforms: string[]

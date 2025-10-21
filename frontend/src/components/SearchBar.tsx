@@ -1,5 +1,3 @@
-"use client"
-
 interface SearchBarProps {
   query: string
   onChange: (value: string) => void

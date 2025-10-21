@@ -1,10 +1,8 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import { useAuth } from "../contexts/auth"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import type { IMovie } from "../types/movies"
-import axios from "axios"
+import { movieApi } from "../services/api"
 
 const ProfilePage = () => {
   const { user, isAuthenticated, logout } = useAuth()
@@ -16,18 +14,15 @@ const ProfilePage = () => {
   const [watchlistMovies, setWatchlistMovies] = useState<IMovie[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const baseUrl = "http://localhost:4000/api"
-
   const fetchMovies = useCallback(async () => {
     if (!user) return
 
     setIsLoading(true)
     try {
-      const response = await axios.get(`${baseUrl}/movies`)
-      const allMovies = response.data
+      const allMovies = await movieApi.getAll()
 
-  const favorites = allMovies.filter((movie: IMovie) => (user.favorites ?? []).includes(movie._id))
-  const watchlist = allMovies.filter((movie: IMovie) => (user.watchlist ?? []).includes(movie._id))
+      const favorites = allMovies.filter((movie: IMovie) => user.favorites?.includes(movie._id) ?? false)
+      const watchlist = allMovies.filter((movie: IMovie) => user.watchlist?.includes(movie._id) ?? false)
 
       setFavoriteMovies(favorites)
       setWatchlistMovies(watchlist)
@@ -49,6 +44,12 @@ const ProfilePage = () => {
   useEffect(() => {
     setActiveTab(searchParams.get("tab") || "overview")
   }, [searchParams])
+
+  useEffect(() => {
+    if (user) {
+      fetchMovies()
+    }
+  }, [user, fetchMovies])
 
   if (!user) return null
 
@@ -87,7 +88,7 @@ const ProfilePage = () => {
         <div className="bg-card border border-border rounded-lg p-6 mb-6">
           <div className="flex items-center gap-4">
             <img
-              src={"frontend/public/vite.svg"}
+              src={"/vite.svg"}
               alt={user.name ?? user.username}
               className="w-20 h-20 rounded-full border-4 border-primary"
             />
@@ -123,7 +124,7 @@ const ProfilePage = () => {
                     : "bg-card text-card-foreground border border-border hover:bg-muted"
             }`}
           >
-                Favoritos ({(user.favorites ?? []).length})
+                Favoritos ({user.favorites?.length ?? 0})
           </button>
           <button
             onClick={() => navigate("/profile?tab=watchlist")}
@@ -133,7 +134,7 @@ const ProfilePage = () => {
                     : "bg-card text-card-foreground border border-border hover:bg-muted"
             }`}
           >
-                Ver después ({(user.watchlist ?? []).length})
+                Ver después ({user.watchlist?.length ?? 0})
           </button>
           <button
             onClick={() => navigate("/profile?tab=settings")}
@@ -151,16 +152,16 @@ const ProfilePage = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-card border border-border rounded-lg p-6 text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">{(user.favorites ?? []).length}</div>
+                  <div className="text-3xl font-bold text-primary mb-2">{user.favorites?.length ?? 0}</div>
                 <div className="text-muted-foreground">Películas Favoritas</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-6 text-center">
-                  <div className="text-3xl font-bold text-accent mb-2">{(user.watchlist ?? []).length}</div>
+                  <div className="text-3xl font-bold text-accent mb-2">{user.watchlist?.length ?? 0}</div>
                 <div className="text-muted-foreground">Para Ver Después</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-6 text-center">
                   <div className="text-3xl font-bold text-secondary mb-2">
-                    {(user.favorites ?? []).length + (user.watchlist ?? []).length}
+                    {(user.favorites?.length ?? 0) + (user.watchlist?.length ?? 0)}
                   </div>
                 <div className="text-muted-foreground">Total Guardadas</div>
               </div>

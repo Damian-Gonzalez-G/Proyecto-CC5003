@@ -12,6 +12,14 @@ const api = axios.create({
   },
 })
 
+const setCsrfToken = (token: string | null) => {
+  if (token) {
+    api.defaults.headers.common["X-CSRF-Token"] = token;
+  } else {
+    delete api.defaults.headers.common["X-CSRF-Token"];
+  }
+};
+
 // Movie API
 export const movieApi = {
   getAll: async (params?: { q?: string; provider?: string }) => {
@@ -42,19 +50,28 @@ export const movieApi = {
 // Auth API
 export const authApi = {
   login: async (username: string, password: string) => {
-    const response = await api.post<{ token: string; user: IUser }>("/login", {
+    const response = await api.post<IUser>("/login", {
       username,
       password,
     })
+    const csrfToken = response.headers["x-csrf-token"];
+    if (csrfToken) {
+      setCsrfToken(csrfToken); // Configúralo globalmente
+    }
     return response.data
   },
 
   logout: async () => {
     await api.post("/login/logout")
+    setCsrfToken(null);
   },
 
   me: async () => {
     const response = await api.get<IUser>("/login/me")
+    const csrfToken = response.headers["x-csrf-token"];
+    if (csrfToken) {
+      setCsrfToken(csrfToken);
+    }
     return response.data
   },
 
@@ -64,6 +81,18 @@ export const authApi = {
       name,
       password,
     })
+    return response.data
+  },
+}
+
+export const userApi = {
+  toggleFavorite: async (userId: string, movieId: string) => {
+    const response = await api.put<IUser>(`/users/${userId}/favorites`, { movieId })
+    return response.data
+  },
+
+  toggleWatchlist: async (userId: string, movieId: string) => {
+    const response = await api.put<IUser>(`/users/${userId}/watchlist`, { movieId })
     return response.data
   },
 }

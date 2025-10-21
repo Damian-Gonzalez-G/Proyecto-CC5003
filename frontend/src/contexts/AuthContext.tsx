@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react"
 import type { IUser } from "../types/user"
-import { authApi } from "../services/api"
+import { authApi, userApi } from "../services/api"
 import { AuthContext } from "./auth"
 
 interface AuthProviderProps {
@@ -16,11 +16,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const userData = await authApi.me()
         if (userData && userData.id) {
-          setUser({
-            ...userData,
-            favorites: [],
-            watchlist: [],
-          })
+          setUser(userData)
         } else {
           setUser(null)
         }
@@ -39,9 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const response = await authApi.login(username, password)
       const userData: IUser = {
-        ...response.user,
-        favorites: [],
-        watchlist: [],
+        ...response
       }
       setUser(userData)
     } catch (error) {
@@ -70,30 +64,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
-  const toggleFavorite = (movieId: string) => {
+  const toggleFavorite = async (movieId: string) => {
     if (!user) return
 
-    const currentFavorites = user.favorites || []
-    const updatedFavorites = currentFavorites.includes(movieId)
-      ? currentFavorites.filter((id: string) => id !== movieId)
-      : [...currentFavorites, movieId]
-
-    const updatedUser = { ...user, favorites: updatedFavorites }
-    setUser(updatedUser)
-    localStorage.setItem(`favorites_${user.id}`, JSON.stringify(updatedFavorites))
+    try {
+      const updatedUser = await userApi.toggleFavorite(user.id, movieId)
+      setUser(updatedUser)
+    } catch (error) {
+      console.error("Error toggling favorite:", error)
+    }
   }
 
-  const toggleWatchlist = (movieId: string) => {
+  const toggleWatchlist = async (movieId: string) => {
     if (!user) return
 
-    const currentWatchlist = user.watchlist || []
-    const updatedWatchlist = currentWatchlist.includes(movieId)
-      ? currentWatchlist.filter((id: string) => id !== movieId)
-      : [...currentWatchlist, movieId]
-
-    const updatedUser = { ...user, watchlist: updatedWatchlist }
-    setUser(updatedUser)
-    localStorage.setItem(`watchlist_${user.id}`, JSON.stringify(updatedWatchlist))
+    try {
+      const updatedUser = await userApi.toggleWatchlist(user.id, movieId)
+      setUser(updatedUser)
+    } catch (error) {
+      console.error("Error toggling watchlist:", error)
+    }
   }
 
   if (isLoading) {

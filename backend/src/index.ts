@@ -24,6 +24,7 @@ app.use(
   cors({
     origin: "http://localhost:4173",
     credentials: true, 
+    exposedHeaders: ["X-CSRF-Token"],
   })
 );
 

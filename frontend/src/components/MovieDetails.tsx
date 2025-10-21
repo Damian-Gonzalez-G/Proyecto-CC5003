@@ -1,10 +1,8 @@
-"use client"
-
 import { useState } from "react"
 import type { IMovie } from "../types/movies"
 import StreamingBadge from "./StreamingBadge"
-import axios from "axios"
 import { useAuth } from "../contexts/auth"
+import { movieApi } from "../services/api"
 
 interface MovieDetailsProps {
   movie: IMovie
@@ -18,25 +16,18 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
 
   const { user, isAuthenticated, toggleFavorite, toggleWatchlist } = useAuth()
 
-  const isFavorite = (user?.favorites ?? []).includes(movie._id)
-  const isInWatchlist = (user?.watchlist ?? []).includes(movie._id)
+  const isFavorite = user?.favorites?.includes(movie._id) ?? false
+  const isInWatchlist = user?.watchlist?.includes(movie._id) ?? false
 
   const handleProviderChange = async () => {
     if (!newProvider.trim()) return
 
     setIsUpdating(true)
     try {
-      const baseUrl = "http://localhost:4000/api"
-
-      const movieToUpdate = {
-        ...movie,
+      const movieUpdatePayload = {
         provider: [newProvider.trim()],
       }
-
-      const response = await axios.put(`${baseUrl}/movies/${movie._id}`, movieToUpdate)
-
-      const updatedMovie = response.data
-
+      const updatedMovie = await movieApi.update(movie._id, movieUpdatePayload)
       if (onMovieUpdate) {
         onMovieUpdate(updatedMovie)
       }
@@ -51,13 +42,21 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
     }
   }
 
+  const handleToggleFavorite = async () => {
+    await toggleFavorite(movie._id)
+  }
+
+  const handleToggleWatchlist = async () => {
+    await toggleWatchlist(movie._id)
+  }
+
   return (
     <>
       <div className="bg-card border border-border rounded-xl p-8 shadow-2xl">
         {isAuthenticated && (
           <div className="flex gap-3 mb-6">
             <button
-              onClick={() => toggleFavorite(movie._id)}
+              onClick={handleToggleFavorite}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
                 isFavorite
                   ? "bg-primary text-primary-foreground shadow-lg shadow-primary/50"
@@ -68,7 +67,7 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
               <span>{isFavorite ? "En Favoritos" : "Agregar a Favoritos"}</span>
             </button>
             <button
-              onClick={() => toggleWatchlist(movie._id)}
+              onClick={handleToggleWatchlist}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
                 isInWatchlist
                   ? "bg-accent text-accent-foreground shadow-lg shadow-accent/50"

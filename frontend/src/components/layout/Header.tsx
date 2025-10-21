@@ -49,7 +49,7 @@ const Header = () => {
                     className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
                   >
                     <img
-                      src={"/placeholder.svg"}
+                      src={"/vite.svg"}
                       alt={user?.name}
                       className="w-8 h-8 rounded-full border-2 border-primary"
                     />

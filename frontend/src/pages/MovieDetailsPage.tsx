@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import MovieDetails from "../components/MovieDetails"
 import type { IMovie } from "../types/movies"
