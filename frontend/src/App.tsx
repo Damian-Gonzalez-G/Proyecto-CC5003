@@ -1,20 +1,52 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import HomePage from "./pages/HomePage";
-import MovieDetailsPage from "./pages/MovieDetailsPage";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { AuthProvider } from "./contexts/AuthContext"
+import Header from "./components/layout/Header"
+import HomePage from "./pages/HomePage"
+import MovieDetailsPage from "./pages/MovieDetailsPage"
+import AuthPage from "./pages/AuthPage"
+import ProfilePage from "./pages/ProfilePage"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-background">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/movies" element={<HomePage />} />
-          <Route path="/movies/:id" element={<MovieDetailsPage />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
-  )
-};
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Navigate to="/auth?tab=login" replace />} />
 
-export default App;
+            <Route path="/auth" element={<AuthPage />} />
+
+            <Route
+              path="/movies"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movies/:id"
+              element={
+                <ProtectedRoute>
+                  <MovieDetailsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
+  )
+}
+
+export default App

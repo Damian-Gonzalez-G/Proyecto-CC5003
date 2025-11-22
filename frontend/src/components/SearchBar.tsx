@@ -1,9 +1,7 @@
-"use client"
-
 interface SearchBarProps {
   query: string
   onChange: (value: string) => void
-};
+}
 
 const SearchBar = ({ query, onChange }: SearchBarProps) => {
   return (
@@ -27,6 +25,6 @@ const SearchBar = ({ query, onChange }: SearchBarProps) => {
       />
     </div>
   )
-};
+}
 
-export default SearchBar;
+export default SearchBar
