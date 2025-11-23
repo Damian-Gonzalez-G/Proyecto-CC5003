@@ -62,12 +62,13 @@ test.describe('CRUD de Películas', () => {
     const updateButton = page.locator('button', { hasText: /actualizar/i });
     await expect(updateButton).toBeVisible();
     await updateButton.click();
-    const providerInput = page.locator('input[name="provider"]');
+    const providerInput = page.locator('input#newProvider');
+    await expect(providerInput).toBeVisible();
     await providerInput.fill('Amazon Prime Video');
-    const confirmButton = page.locator('button', { hasText: /guardar|confirmar|actualizar/i });
+    const confirmButton = page.locator('button', { hasText: /guardar/i });
     await expect(confirmButton).toBeVisible();
     await confirmButton.click();
-    await expect(page.locator('.movie-card', { hasText: 'Amazon Prime Video' })).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('.platform-badge', { hasText: 'Amazon Prime Video' })).toBeVisible({ timeout: 10000 });
   });
 
   test('debe agregar película a favoritos', async ({ page }) => {
