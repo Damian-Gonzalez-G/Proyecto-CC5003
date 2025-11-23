@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../../contexts/auth"
+import { useAuthStore } from "../../stores/authStore"
 import { useState } from "react"
 
 const Header = () => {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout } = useAuthStore()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 

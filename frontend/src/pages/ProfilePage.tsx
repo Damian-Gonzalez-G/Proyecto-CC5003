@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react"
-import { useAuth } from "../contexts/auth"
+import { useAuthStore } from "../stores/authStore"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import type { IMovie } from "../types/movies"
 import { movieApi } from "../services/api"
 
 const ProfilePage = () => {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout } = useAuthStore()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialTab = searchParams.get("tab") || "overview"

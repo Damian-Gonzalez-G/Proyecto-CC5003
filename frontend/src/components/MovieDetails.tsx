@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { IMovie } from "../types/movies"
 import StreamingBadge from "./StreamingBadge"
-import { useAuth } from "../contexts/auth"
+import { useAuthStore } from "../stores/authStore"
 import { movieApi } from "../services/api"
 
 interface MovieDetailsProps {
@@ -14,7 +14,8 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
   const [newProvider, setNewProvider] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const { user, isAuthenticated, toggleFavorite, toggleWatchlist } = useAuth()
+  const { user, isAuthenticated } = useAuthStore()
+  // Si tienes lógica de favoritos/watchlist en el store, impórtala aquí
 
   const isFavorite = user?.favorites?.includes(movie._id) ?? false
   const isInWatchlist = user?.watchlist?.includes(movie._id) ?? false
@@ -42,12 +43,15 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
     }
   }
 
+  // Implementa aquí la lógica para favoritos/watchlist usando el store o servicios
   const handleToggleFavorite = async () => {
-    await toggleFavorite(movie._id)
+    // TODO: implementar con store o API
+    alert("Funcionalidad de favoritos no implementada en Zustand aún.")
   }
 
   const handleToggleWatchlist = async () => {
-    await toggleWatchlist(movie._id)
+    // TODO: implementar con store o API
+    alert("Funcionalidad de watchlist no implementada en Zustand aún.")
   }
 
   return (
