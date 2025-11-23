@@ -1,11 +1,11 @@
 import { create } from 'zustand';
-import type { Movie } from '../types/movies';
+import type { IMovie } from '../types/movies';
 
 interface MoviesState {
-  movies: Movie[];
+  movies: IMovie[];
   loading: boolean;
   error: string | null;
-  setMovies: (movies: Movie[]) => void;
+  setMovies: (movies: IMovie[]) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 }
