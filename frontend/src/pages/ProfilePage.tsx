@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react"
 import { useAuthStore } from "../stores/authStore"
+import { useMoviesStore } from "../stores/moviesStore"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import type { IMovie } from "../types/movies"
-import { movieApi } from "../services/api"
 
 const ProfilePage = () => {
   const { user, isAuthenticated, logout } = useAuthStore()
@@ -10,28 +10,32 @@ const ProfilePage = () => {
   const [searchParams] = useSearchParams()
   const initialTab = searchParams.get("tab") || "overview"
   const [activeTab, setActiveTab] = useState(initialTab)
+  const { movies, loading, setMovies, setLoading, setError } = useMoviesStore()
   const [favoriteMovies, setFavoriteMovies] = useState<IMovie[]>([])
   const [watchlistMovies, setWatchlistMovies] = useState<IMovie[]>([])
-  const [isLoading, setIsLoading] = useState(true)
 
   const fetchMovies = useCallback(async () => {
     if (!user) return
-
-    setIsLoading(true)
+    setLoading(true)
+    setError(null)
     try {
-      const allMovies = await movieApi.getAll()
-
+      let allMovies = movies
+      if (!movies || movies.length === 0) {
+        const { movieApi } = await import("../services/api")
+        allMovies = await movieApi.getAll()
+        setMovies(allMovies)
+      }
       const favorites = allMovies.filter((movie: IMovie) => user.favorites?.includes(movie._id) ?? false)
       const watchlist = allMovies.filter((movie: IMovie) => user.watchlist?.includes(movie._id) ?? false)
-
       setFavoriteMovies(favorites)
       setWatchlistMovies(watchlist)
     } catch (err) {
+      setError("Error al cargar películas")
       console.error(err)
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
-  }, [user])
+  }, [user, movies, setMovies, setLoading, setError])
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -183,7 +187,7 @@ const ProfilePage = () => {
         {activeTab === "favorites" && (
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-4">Mis Favoritos</h2>
-            {isLoading ? (
+            {loading ? (
               <div className="text-center py-12">
                 <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
                 <p className="text-muted-foreground">Cargando favoritos...</p>
@@ -214,7 +218,7 @@ const ProfilePage = () => {
         {activeTab === "watchlist" && (
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-4">Ver Después</h2>
-            {isLoading ? (
+            {loading ? (
               <div className="text-center py-12">
                 <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
                 <p className="text-muted-foreground">Cargando lista...</p>

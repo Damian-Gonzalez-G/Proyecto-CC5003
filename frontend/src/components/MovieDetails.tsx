@@ -14,8 +14,7 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
   const [newProvider, setNewProvider] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const { user, isAuthenticated } = useAuthStore()
-  // Si tienes lógica de favoritos/watchlist en el store, impórtala aquí
+  const { user, isAuthenticated, toggleFavorite, toggleWatchlist } = useAuthStore()
 
   const isFavorite = user?.favorites?.includes(movie._id) ?? false
   const isInWatchlist = user?.watchlist?.includes(movie._id) ?? false
@@ -43,15 +42,14 @@ const MovieDetails = ({ movie, onMovieUpdate }: MovieDetailsProps) => {
     }
   }
 
-  // Implementa aquí la lógica para favoritos/watchlist usando el store o servicios
   const handleToggleFavorite = async () => {
-    // TODO: implementar con store o API
-    alert("Funcionalidad de favoritos no implementada en Zustand aún.")
+    if (!user) return;
+    await toggleFavorite(movie._id);
   }
 
   const handleToggleWatchlist = async () => {
-    // TODO: implementar con store o API
-    alert("Funcionalidad de watchlist no implementada en Zustand aún.")
+    if (!user) return;
+    await toggleWatchlist(movie._id);
   }
 
   return (

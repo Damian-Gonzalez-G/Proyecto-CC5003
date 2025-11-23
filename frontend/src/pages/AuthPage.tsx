@@ -68,7 +68,6 @@ const AuthPage = () => {
     try {
       if (activeTab === "login") {
         const user = await authApi.login(formData.username, formData.password)
-        // Aquí podrías obtener el token si tu backend lo retorna
         login(user, "token")
       } else {
         const user = await authApi.register(formData.username, formData.name, formData.password)
