@@ -20,7 +20,6 @@ const setCsrfToken = (token: string | null) => {
   }
 };
 
-// Movie API
 export const movieApi = {
   getAll: async (params?: { q?: string; provider?: string }) => {
     const response = await api.get<IMovie[]>("/movies", { params })
@@ -47,7 +46,6 @@ export const movieApi = {
   },
 }
 
-// Auth API
 export const authApi = {
   login: async (username: string, password: string) => {
     const response = await api.post<IUser>("/login", {
@@ -56,7 +54,7 @@ export const authApi = {
     })
     const csrfToken = response.headers["x-csrf-token"];
     if (csrfToken) {
-      setCsrfToken(csrfToken); // Configúralo globalmente
+      setCsrfToken(csrfToken);
     }
     return response.data
   },
@@ -97,7 +95,6 @@ export const userApi = {
   },
 }
 
-// Health check
 export const healthCheck = async () => {
   const response = await api.get("/health")
   return response.data
