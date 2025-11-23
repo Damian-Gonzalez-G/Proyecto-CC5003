@@ -184,3 +184,67 @@ curl -X POST http://localhost:4000/api/login/logout
 ```
 
 Esto limpia la cookie httpOnly y finaliza la sesión.
+
+---
+
+## 🧪 Pruebas E2E (End-to-End)
+
+El proyecto incluye pruebas E2E completas utilizando Playwright que validan el funcionamiento de la aplicación de principio a fin.
+
+### Casos de Prueba Implementados
+
+#### Autenticación y Rutas Protegidas
+- Login con credenciales válidas e inválidas
+- Registro de nuevos usuarios
+- Validación de rutas protegidas
+- Cierre de sesión
+
+#### CRUD de Películas
+- Listar y buscar películas
+- Filtrar por género y plataforma
+- Ver detalles de películas
+- Crear, editar y eliminar películas
+- Agregar a favoritos y lista de "ver después"
+
+### Ejecutar las Pruebas E2E
+
+1. **Asegúrate de tener el backend y frontend corriendo:**
+   ```bash
+   # Terminal 1: Backend
+   cd backend
+   npm run dev
+   
+   # Terminal 2: Frontend (en modo preview)
+   cd frontend
+   npm run build
+   npm run preview
+   ```
+
+2. **Instalar dependencias de las pruebas:**
+   ```bash
+   cd e2e-tests
+   npm install
+   npx playwright install
+   ```
+
+3. **Crear usuario de prueba:**
+   ```bash
+   curl -X POST http://localhost:4000/api/users \
+   -H "Content-Type: application/json" \
+   -d '{"username":"testuser","name":"Test User","password":"password123"}'
+   ```
+
+4. **Ejecutar las pruebas:**
+   ```bash
+   # Ejecutar todas las pruebas
+   npm test
+   
+   # Ejecutar en modo UI (interactivo)
+   npx playwright test --ui
+   
+   # Ver el reporte
+   npm run test:report
+   ```
+
+Para más información sobre las pruebas E2E, consulta el [README de e2e-tests](./e2e-tests/README.md).
+
