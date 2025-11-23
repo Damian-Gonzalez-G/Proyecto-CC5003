@@ -2,19 +2,19 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import Movie from "../components/Movie"
 import SearchBar from "../components/SearchBar"
 import FilterBar from "../components/FilterBar"
-import type { IMovie } from "../types/movies"
+import { useMoviesStore } from "../stores/moviesStore"
 import { movieApi } from "../services/api"
 
 const HomePage = () => {
-  const [movies, setMovies] = useState<IMovie[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedGenre, setSelectedGenre] = useState("")
   const [selectedPlatform, setSelectedPlatform] = useState("")
   const [sortBy, setSortBy] = useState("title")
-  const [isLoading, setIsLoading] = useState(true)
+  const { movies, setMovies, loading, setLoading, error, setError } = useMoviesStore()
 
   const fetchMovies = useCallback(async () => {
-    setIsLoading(true)
+    setLoading(true)
+    setError(null)
     try {
       const params: { q?: string; provider?: string } = {}
       if (searchQuery) params.q = searchQuery
@@ -23,11 +23,12 @@ const HomePage = () => {
       const data = await movieApi.getAll(params)
       setMovies(data)
     } catch (err) {
+      setError("Error al cargar películas")
       console.error("Error fetching movies:", err)
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
-  }, [searchQuery, selectedPlatform])
+  }, [searchQuery, selectedPlatform, setMovies, setLoading, setError])
 
   useEffect(() => {
     fetchMovies()
@@ -93,13 +94,15 @@ const HomePage = () => {
 
       <div className="text-center mb-4">
         <p className="text-muted-foreground">
-          {isLoading
+          {loading
             ? "Cargando películas..."
+            : error
+            ? error
             : `${filteredMovies.length} película${filteredMovies.length !== 1 ? "s" : ""} encontrada${filteredMovies.length !== 1 ? "s" : ""}`}
         </p>
       </div>
 
-      {isLoading ? (
+      {loading ? (
         <div className="loading-state">
           <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mb-4"></div>
           <p className="text-lg">Cargando catálogo...</p>

@@ -2,7 +2,8 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { useAuth } from "../contexts/auth"
+import { useAuthStore } from "../stores/authStore"
+import { authApi } from "../services/api"
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams()
@@ -17,7 +18,7 @@ const AuthPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
 
-  const { login, register, isAuthenticated } = useAuth()
+  const { login, isAuthenticated } = useAuthStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -66,14 +67,16 @@ const AuthPage = () => {
 
     try {
       if (activeTab === "login") {
-        await login(formData.username, formData.password)
+        const user = await authApi.login(formData.username, formData.password)
+        login(user, "token")
       } else {
-        await register(formData.username, formData.name, formData.password)
+        const user = await authApi.register(formData.username, formData.name, formData.password)
+        login(user, "token")
       }
       navigate("/movies")
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error de autenticación:", error)
-      setErrors({ general: "Error al procesar la solicitud. Verifica tus credenciales." })
+      setErrors({ general: error?.response?.data?.error || "Error al procesar la solicitud. Verifica tus credenciales." })
     } finally {
       setIsLoading(false)
     }
