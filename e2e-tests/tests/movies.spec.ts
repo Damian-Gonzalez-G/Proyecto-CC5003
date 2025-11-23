@@ -12,7 +12,7 @@ test.describe('CRUD de Películas', () => {
       await page.locator('form').getByRole('button', { name: /iniciar sesión/i }).click();
       await expect(page).toHaveURL(/.*movies/, { timeout: 10000 });
     }
-    await page.goto('/');
+    await page.goto('/movies');
     await page.waitForLoadState('networkidle');
   });
 
@@ -99,5 +99,50 @@ test.describe('CRUD de Películas', () => {
     const movieElements = page.locator('.movie-card');
     const count = await movieElements.count();
     expect(count).toBeGreaterThan(0);
+  });
+
+  test('debe crear una nueva película', async ({ page }) => {
+    const timestamp = Date.now();
+    createdMovieTitle = `Test Movie ${timestamp}`;
+    const createButton = page.locator('a', { hasText: 'Nueva Película' });
+    await expect(createButton).toBeVisible({ timeout: 10000 });
+    await createButton.click();
+    await expect(page).toHaveURL(/.*movies\/create/, { timeout: 5000 });
+    await page.locator('input#title').fill(createdMovieTitle);
+    await page.locator('input#director').fill('Test Director');
+    await page.locator('input#year').fill('2024');
+    await page.locator('input#time').fill('120');
+    await page.locator('input#rating').fill('8.5');
+    await page.locator('input#genre').fill('Acción, Ciencia Ficción');
+    await page.locator('textarea#cast').fill('Actor 1, Actor 2');
+    await page.locator('input#provider').fill('Netflix');
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(/.*movies\/[a-zA-Z0-9]+/, { timeout: 10000 });
+    await expect(page.locator('h1', { hasText: createdMovieTitle })).toBeVisible({ timeout: 10000 });
+  });
+
+  test('debe eliminar una película', async ({ page }) => {
+    const timestamp = Date.now();
+    const movieToDelete = `Delete Test ${timestamp}`;
+    await page.locator('a', { hasText: 'Nueva Película' }).click();
+    await expect(page).toHaveURL(/.*movies\/create/, { timeout: 5000 });
+    await page.locator('input#title').fill(movieToDelete);
+    await page.locator('input#director').fill('Test Director');
+    await page.locator('input#year').fill('2024');
+    await page.locator('input#time').fill('90');
+    await page.locator('input#rating').fill('5.0');
+    await page.locator('input#genre').fill('Drama');
+    await page.locator('input#provider').fill('HBO');
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(/.*movies\/[a-zA-Z0-9]+/, { timeout: 10000 });
+    await expect(page.locator('h1', { hasText: movieToDelete })).toBeVisible();
+    const deleteButton = page.locator('button', { hasText: 'Eliminar Película' });
+    await expect(deleteButton).toBeVisible();
+    await deleteButton.click();
+    const confirmDeleteButton = page.locator('button', { hasText: /sí.*eliminar/i });
+    await expect(confirmDeleteButton).toBeVisible();
+    await confirmDeleteButton.click();
+    await expect(page).toHaveURL(/.*\/movies$/, { timeout: 10000 });
+    await expect(page.locator('.movie-card', { hasText: movieToDelete })).not.toBeVisible();
   });
 });
