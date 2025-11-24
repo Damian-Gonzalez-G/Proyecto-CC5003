@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "allowJs": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "types": ["node", "playwright"]
+  },
+  "include": ["**/*.ts"]
+}

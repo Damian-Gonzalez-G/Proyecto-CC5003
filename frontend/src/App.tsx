@@ -3,6 +3,7 @@ import { AuthProvider } from "./contexts/AuthContext"
 import Header from "./components/layout/Header"
 import HomePage from "./pages/HomePage"
 import MovieDetailsPage from "./pages/MovieDetailsPage"
+import CreateMoviePage from "./pages/CreateMoviePage"
 import AuthPage from "./pages/AuthPage"
 import ProfilePage from "./pages/ProfilePage"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -23,6 +24,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movies/create"
+              element={
+                <ProtectedRoute>
+                  <CreateMoviePage />
                 </ProtectedRoute>
               }
             />

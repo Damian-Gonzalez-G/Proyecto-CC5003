@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
+import { Link } from "react-router-dom"
 import Movie from "../components/Movie"
 import SearchBar from "../components/SearchBar"
 import FilterBar from "../components/FilterBar"
@@ -70,10 +71,20 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="page-header text-5xl md:text-7xl font-bold mb-8">WatchGuide</h1>
-      <p className="text-center text-muted-foreground mb-8 text-lg">
-        Encuentra dónde ver tus películas favoritas con información siempre actualizada
-      </p>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex-1">
+          <h1 className="page-header text-5xl md:text-7xl font-bold">WatchGuide</h1>
+          <p className="text-center text-muted-foreground mt-4 text-lg">
+            Encuentra dónde ver tus películas favoritas con información siempre actualizada
+          </p>
+        </div>
+        <Link
+          to="/movies/create"
+          className="create-movie-btn px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors shadow-lg"
+        >
+          + Nueva Película
+        </Link>
+      </div>
 
       <div className="search-container mb-6">
         <SearchBar query={searchQuery} onChange={setSearchQuery} />
