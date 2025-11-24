@@ -1,9 +1,94 @@
-﻿# Hito 2 - Backend y autenticación
-
-### Integrantes
+﻿### Integrantes
 - Carlos Ibáñez Q.
 - Damián González G.
 - Rodrigo Manríquez M.
+
+# Proyecto CC5003: WatchGuide
+
+Aplicación web fullstack para gestión de películas, con autenticación de usuarios, favoritos, listas personalizadas y pruebas E2E. Incluye frontend en React + Zustand, backend Node/Express + MongoDB, y tests automáticos con Playwright.
+
+
+## Instrucciones de instalación y ejecución
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <URL-del-repo>
+```
+
+### 2. Instalar dependencias y levantar backend
+
+```bash
+cd backend
+npm install
+```
+
+#### Requisitos backend
+- Node.js ≥ 18
+- MongoDB local (puedes usar Homebrew, Docker o instalador oficial)
+
+#### Iniciar MongoDB
+```bash
+mkdir -p ~/data/db
+mongod --dbpath ~/data/db
+```
+
+#### Configurar variables de entorno
+Crea un archivo `.env` en `/backend`:
+```
+MONGODB_URI=mongodb://127.0.0.1:27017/moviesdb
+PORT=4000
+JWT_SECRET=un_secreto_seguro
+```
+
+#### Levantar backend
+```bash
+npm run dev
+```
+
+#### Poblar base de datos (opcional)
+```bash
+npm run seed      # Borra y carga todo
+npm run seed:upsert  # Inserta/actualiza sin borrar
+```
+
+### 3. Instalar dependencias y levantar frontend
+
+```bash
+cd ../frontend
+npm install
+npm run build
+npm run preview
+```
+
+### 4. Pruebas E2E
+
+```bash
+cd ../e2e-tests
+npm install
+npx playwright install
+npm test
+```
+
+---
+
+## Estructura del Estado Global (Zustand)
+
+La aplicación utiliza la librería [Zustand](https://zustand-demo.pmnd.rs/) para el manejo del estado global en el frontend. Esto permite compartir y sincronizar el estado entre componentes de manera eficiente y sencilla.
+
+### Stores principales
+
+- **authStore:** Maneja el estado de autenticación del usuario, incluyendo:
+   - Usuario autenticado y su información
+   - Token de sesión
+   - Métodos para login, logout, registro
+   - Métodos para agregar/quitar películas de favoritos y lista de ver después
+
+- **moviesStore:** Gestiona el listado global de películas, su estado de carga y errores. Permite que las páginas y componentes accedan a la lista de películas y la mantengan sincronizada sin recargar desde la API en cada vista.
+
+Ambos stores permiten que el estado de usuario y películas esté disponible en cualquier componente React, facilitando la navegación entre páginas y la actualización reactiva de la UI.
+
+
 
 ## Instrucciones de instalación
 
