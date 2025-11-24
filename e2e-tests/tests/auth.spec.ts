@@ -18,7 +18,7 @@ test.describe('Autenticación y Rutas Protegidas', () => {
     await page.getByLabel(/nombre de usuario/i).fill('usuarioInvalido');
     await page.getByLabel(/contraseña/i).first().fill('passwordIncorrecto');
     await page.getByRole('button', { name: /iniciar sesión/i }).last().click();
-    await expect(page.getByText(/error/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/invalid username or password/i)).toBeVisible({ timeout: 5000 });
   });
 
   test('debe permitir login exitoso con credenciales válidas', async ({ page }) => {
