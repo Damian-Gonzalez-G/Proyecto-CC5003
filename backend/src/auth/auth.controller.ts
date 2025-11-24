@@ -27,11 +27,11 @@ router.post("/", async (req, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax", 
+    sameSite: "lax",
     path: "/",
   });
 
-  return res.status(200).json({ id: user.id, username: user.username, name: user.name });
+  return res.status(200).json(user);
 });
 
 router.get("/me", async (req, res) => {
@@ -52,7 +52,7 @@ router.get("/me", async (req, res) => {
       if (csrf) {
         res.setHeader("X-CSRF-Token", csrf);
       }
-      
+
       return res.status(200).json(user);
     }
 

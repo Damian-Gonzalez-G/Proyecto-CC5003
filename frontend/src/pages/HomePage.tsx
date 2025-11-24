@@ -5,13 +5,15 @@ import SearchBar from "../components/SearchBar"
 import FilterBar from "../components/FilterBar"
 import { useMoviesStore } from "../stores/moviesStore"
 import { movieApi } from "../services/api"
+import type { IMovie } from "../types/movies"
 
 const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedGenre, setSelectedGenre] = useState("")
   const [selectedPlatform, setSelectedPlatform] = useState("")
   const [sortBy, setSortBy] = useState("title")
-  const { movies, setMovies, loading, setLoading, error, setError } = useMoviesStore()
+  const [fetchedMovies, setFetchedMovies] = useState<IMovie[]>([])
+  const { setMovies, loading, setLoading, error, setError } = useMoviesStore()
 
   const fetchMovies = useCallback(async () => {
     setLoading(true)
@@ -22,7 +24,11 @@ const HomePage = () => {
       if (selectedPlatform) params.provider = selectedPlatform
 
       const data = await movieApi.getAll(params)
-      setMovies(data)
+      setFetchedMovies(data)
+
+      if (!searchQuery && !selectedPlatform) {
+        setMovies(data)
+      }
     } catch (err) {
       setError("Error al cargar películas")
       console.error("Error fetching movies:", err)
@@ -37,18 +43,18 @@ const HomePage = () => {
 
   const availableGenres = useMemo(() => {
     const genreSet = new Set<string>()
-    movies.forEach((movie) => movie.genre.forEach((g) => genreSet.add(g)))
+    fetchedMovies.forEach((movie) => movie.genre.forEach((g) => genreSet.add(g)))
     return Array.from(genreSet).sort()
-  }, [movies])
+  }, [fetchedMovies])
 
   const availablePlatforms = useMemo(() => {
     const platformSet = new Set<string>()
-    movies.forEach((movie) => movie.provider.forEach((p) => platformSet.add(p)))
+    fetchedMovies.forEach((movie) => movie.provider.forEach((p) => platformSet.add(p)))
     return Array.from(platformSet).sort()
-  }, [movies])
+  }, [fetchedMovies])
 
   const filteredMovies = useMemo(() => {
-    let filtered = [...movies]
+    let filtered = [...fetchedMovies]
 
     if (selectedGenre) {
       filtered = filtered.filter((movie) => movie.genre.includes(selectedGenre))
@@ -67,7 +73,7 @@ const HomePage = () => {
     })
 
     return filtered
-  }, [movies, selectedGenre, sortBy])
+  }, [fetchedMovies, selectedGenre, sortBy])
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -108,8 +114,8 @@ const HomePage = () => {
           {loading
             ? "Cargando películas..."
             : error
-            ? error
-            : `${filteredMovies.length} película${filteredMovies.length !== 1 ? "s" : ""} encontrada${filteredMovies.length !== 1 ? "s" : ""}`}
+              ? error
+              : `${filteredMovies.length} película${filteredMovies.length !== 1 ? "s" : ""} encontrada${filteredMovies.length !== 1 ? "s" : ""}`}
         </p>
       </div>
 

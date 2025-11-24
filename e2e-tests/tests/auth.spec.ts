@@ -7,9 +7,9 @@ test.describe('Autenticación y Rutas Protegidas', () => {
 
   test('debe mostrar el formulario de login', async ({ page }) => {
     await expect(page).toHaveURL(/.*auth/);
-    
+
     await expect(page.getByRole('heading', { name: 'WatchGuide' })).toBeVisible();
-    
+
     await expect(page.getByLabel(/nombre de usuario/i)).toBeVisible();
     await expect(page.getByLabel(/contraseña/i)).toBeVisible();
   });
@@ -33,6 +33,9 @@ test.describe('Autenticación y Rutas Protegidas', () => {
     await page.getByLabel(/^contraseña/i).fill('password123');
     await page.getByLabel(/confirmar contraseña/i).fill('password123');
     await page.getByRole('button', { name: /crear cuenta/i }).click();
+
+    await page.getByRole('button', { name: 'Usuario de Prueba' }).click();
+
     const logoutButton = page.getByRole('button', { name: /cerrar sesión|logout/i });
     if (await logoutButton.isVisible()) {
       await logoutButton.click();
@@ -76,6 +79,9 @@ test.describe('Autenticación y Rutas Protegidas', () => {
     await page.getByLabel(/^contraseña/i).fill('password123');
     await page.getByLabel(/confirmar contraseña/i).fill('password123');
     await page.getByRole('button', { name: /crear cuenta/i }).click();
+
+    await page.getByRole('button', { name: 'Usuario de Prueba' }).click();
+
     const logoutButton = page.getByRole('button', { name: /cerrar sesión|logout/i });
     if (await logoutButton.isVisible()) {
       await logoutButton.click();
