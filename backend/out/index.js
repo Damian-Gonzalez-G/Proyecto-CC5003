@@ -7,6 +7,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const path_1 = __importDefault(require("path"));
 const db_1 = require("./config/db");
 const movie_routes_1 = __importDefault(require("./movies/movie.routes"));
 const user_controller_1 = __importDefault(require("./users/user.controller"));
@@ -21,8 +22,8 @@ app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     origin: [
-      'http://localhost:5173',
-      'http://localhost:4173'
+        'http://localhost:5173',
+        'http://localhost:4173'
     ],
     credentials: true,
     exposedHeaders: ["X-CSRF-Token"],
@@ -35,6 +36,10 @@ app.get("/api/secure/ping", auth_1.withUser, (req, res) => {
     res.json({ ok: true, by: req.userId });
 });
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
+app.use(express_1.default.static(path_1.default.join(__dirname, '/frontend/dist')));
+app.get(/.*/, (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, '/frontend/dist/index.html'));
+});
 app.use(unknownEndpoint_1.unknownEndpoint);
 app.use(errorHandler_1.errorHandler);
 const PORT = process.env.PORT || 4000;

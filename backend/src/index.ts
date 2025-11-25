@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from 'path';
 
 import { connectDB } from "./config/db";
 import movieRoutes from "./movies/movie.routes";
@@ -42,6 +43,12 @@ app.get("/api/secure/ping", withUser, (req, res) => {
 });
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
+
+app.use(express.static(path.join(__dirname, '/frontend/dist')));
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '/frontend/dist/index.html'));
+});
 
 app.use(unknownEndpoint);
 app.use(errorHandler);
