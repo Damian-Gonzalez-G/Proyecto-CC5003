@@ -14,7 +14,7 @@ import { unknownEndpoint } from "./middlewares/unknownEndpoint";
 import { errorHandler } from "./middlewares/errorHandler";  
 import { withUser } from "./auth/auth";                   
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
@@ -25,7 +25,8 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'http://localhost:4173'
+      'http://localhost:4173',
+      'https://fullstack.dcc.uchile.cl:7175'
     ],
     credentials: true, 
     exposedHeaders: ["X-CSRF-Token"],
@@ -44,10 +45,16 @@ app.get("/api/secure/ping", withUser, (req, res) => {
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
-app.use(express.static(path.join(__dirname, '/frontend/dist')));
+// Definimos la ruta explícitamente
+const frontendPath = path.join(__dirname, '../frontend/dist');
+
+// IMPRIMIR EN CONSOLA LA RUTA PARA VERIFICAR
+console.log('⚠️  Ruta del Frontend:', frontendPath);
+
+app.use(express.static(frontendPath));
 
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '/frontend/dist/index.html'));
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 app.use(unknownEndpoint);

@@ -16,14 +16,15 @@ const requestLogger_1 = require("./middlewares/requestLogger");
 const unknownEndpoint_1 = require("./middlewares/unknownEndpoint");
 const errorHandler_1 = require("./middlewares/errorHandler");
 const auth_1 = require("./auth/auth");
-dotenv_1.default.config();
+dotenv_1.default.config({ path: path_1.default.join(__dirname, '../.env') });
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     origin: [
         'http://localhost:5173',
-        'http://localhost:4173'
+        'http://localhost:4173',
+        'https://fullstack.dcc.uchile.cl:7175'
     ],
     credentials: true,
     exposedHeaders: ["X-CSRF-Token"],
@@ -36,9 +37,13 @@ app.get("/api/secure/ping", auth_1.withUser, (req, res) => {
     res.json({ ok: true, by: req.userId });
 });
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
-app.use(express_1.default.static(path_1.default.join(__dirname, '/frontend/dist')));
+// Definimos la ruta explícitamente
+const frontendPath = path_1.default.join(__dirname, '../frontend/dist');
+// IMPRIMIR EN CONSOLA LA RUTA PARA VERIFICAR
+console.log('⚠️  Ruta del Frontend:', frontendPath);
+app.use(express_1.default.static(frontendPath));
 app.get(/.*/, (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, '/frontend/dist/index.html'));
+    res.sendFile(path_1.default.join(frontendPath, 'index.html'));
 });
 app.use(unknownEndpoint_1.unknownEndpoint);
 app.use(errorHandler_1.errorHandler);
