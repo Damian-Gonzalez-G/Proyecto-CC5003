@@ -100,6 +100,26 @@ npm test
 ---
 
 
-## Despliegue (Por terminar)
-La aplicación se encontrará desplegada en:
-`http://fullstack.dcc.uchile.cl:7175`
+## Despliegue (Post-entrega)
+La aplicación se desplegó en `http://fullstack.dcc.uchile.cl:7175` siguiendo estas instrucciones:
+
+1. Se compiló el frontend:
+frontend % npm run build
+2. Se copió la carpeta resultante (dist) en una carpeta llamada frontend dentro de la carpeta backend (backend/frontend/dist).
+3. Se modificaron algunos archivos, el .env para adaptar el proyecto a correr deployado y el index.ts para servir el frontend desde el backend.
+4. Se compiló el backend y se copió a una carpeta creada en el servidor, desde una terminal:
+scp -P 219 -r backend fullstack@fullstack.dcc.uchile.cl:~/watchguide/
+5. En la misma terminal, se conectó al servidor:
+ssh -p 219 fullstack@fullstack.dcc.uchile.cl
+Se ingresó la clave de las credenciales y se navegó hasta la carpeta backend.
+6. Se hizo:
+npm install
+y luego se creó una sesión persistente con screen:
+screen -S WatchGuide
+después se inició el servidor:
+npm run start
+como es una sesión persistente screen, se "despegó":
+Ctrl + A -> D
+
+Con esto la aplicación quedó disponible en `http://fullstack.dcc.uchile.cl:7175`, completamente funcional, sin la necesidad de tener abierta una terminal, accesible desde cualquier dispositivo.
+
